@@ -1,0 +1,72 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using OpenCvSharp;
+
+namespace WindowsFormsApp6
+{
+    public partial class Form1 : Form
+    {  
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        CvCapture capture;
+        CvCapture capture1;
+        IplImage src;
+        IplImage src1;
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Cv.ReleaseImage(src);
+            if (src != null)src.Dispose();
+            Cv.ReleaseImage(src1);
+            if (src1 != null) src1.Dispose();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                capture = CvCapture.FromCamera(CaptureDevice.DShow, 0);              
+                capture.SetCaptureProperty(CaptureProperty.FrameWidth, 640);
+                capture.SetCaptureProperty(CaptureProperty.FrameHeight, 480);
+
+                capture1 = CvCapture.FromCamera(CaptureDevice.DShow, 1);
+                capture1.SetCaptureProperty(CaptureProperty.FrameWidth, 640);
+                capture1.SetCaptureProperty(CaptureProperty.FrameHeight, 480);
+
+            }
+
+            catch
+            {
+                timer1.Enabled = false;
+
+                timer2.Enabled = false;
+            }
+           
+
+        }      
+            private void timer1_Tick(object sender, EventArgs e)
+        {
+            src = capture.QueryFrame();
+            pictureBoxIpl1.ImageIpl = src;
+         
+
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            src1 = capture1.QueryFrame();
+            pictureBoxIpl2.ImageIpl = src1;
+        }
+    }
+
+}
